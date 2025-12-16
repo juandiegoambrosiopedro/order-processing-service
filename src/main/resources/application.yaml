@@ -53,8 +53,10 @@ security:
       - path: "/swagger-ui/index.html"
       - path: "/webjars/**"
       - path: "/swagger-ui.html"
+      - path: "/api-docs"
       - path: "/api-docs/**"
       - path: "/swagger-resources/**"
+      - path: "/actuator/**"
 
       - path: "/h2-console/**"
       - path: "/h2-console*/**"
