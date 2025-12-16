@@ -62,8 +62,8 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado:
 ### 1.- Clonar el Repositorio
 ```bash
 
-git clone https://github.com/tu-usuario/order-processing-service.git
-cd order-processing-service
+git clone https://github.com/juandiegoambrosiopedro/order-processing-service.git
+
 ```
 
 ### 2.- Importar el Proyecto en IntelliJ IDEA
@@ -294,4 +294,4 @@ curl --location 'http://localhost:8080/orders/process' \
 
 ## 👥 Autor
 
-Juan Diego Ambrosio Pedro - [GitHub](https://github.com/tu-usuario)
+Juan Diego Ambrosio Pedro - [GitHub](https://github.com/juandiegoambrosiopedro)
