@@ -291,6 +291,112 @@ curl --location 'http://localhost:8080/orders/process' \
 
 
 ---
+# Propuesta: Arquitectura orientada a eventos con Pub/Sub (GCP)
+### Situación actual
+**Actualmente, el microservicio Order Processing Service:**
+   - Expone endpoints REST `/orders/process`
+   - Valida inventario de forma síncrona
+   - Persiste la orden en base de datos
+   - Devuelve la respuesta al cliente en el mismo flujo
+
+**Esto funciona correctamente, pero genera:**
+   - Acoplamiento directo entre órdenes e inventario
+   - Latencia al depender de servicios externos
+   - Dificultad para escalar validaciones y procesos adicionales (facturación, notificaciones)
+
+### Propuesta de mejora (orientada a eventos)
+Se propone mantener el API REST actual, pero desacoplar el procesamiento interno mediante eventos una arquitectura orientada a eventos (Event-Driven Architecture) utilizando Google Cloud Pub/Sub como mecanismo de mensajería.
+
+### Principios clave
+- Desacoplamiento entre productores y consumidores.
+- Comunicación asíncrona.
+- Escalabilidad horizontal.
+- Resiliencia y tolerancia a fallos.
+
+### Flujo de propuesta
+1. **El cliente envía una solicitud para crear una orden:**
+2. **El microservicio Order Processing:**
+   - Valida la solicitud.
+   - Persiste la orden en estado: `PENDING`
+   - Publica un evento OrderCreated en un tópico de Pub/Sub.
+3. **Servicios consumidores se suscriben al evento:**
+   - Inventory Service → reserva o descuenta stock.
+   - Billing Service → genera la facturación.
+   - Notification Service → envía confirmaciones.
+4. **Cada consumidor procesa el evento de manera independiente.**
+5. **Los servicios pueden emitir nuevos eventos (InventoryReserved, OrderConfirmed, OrderRejected).**
+
+### Beneficios de esta arquitectura
+- Desacoplamiento total entre dominios.
+- Alta escalabilidad: cada consumidor escala de forma independiente.
+- Mayor resiliencia: un fallo en un consumidor no afecta a los demás.
+- Extensibilidad: agregar nuevos procesos no requiere modificar el productor.
+- Mejor experiencia de usuario: respuestas más rápidas al cliente.
+
+## Diagrama visual – Arquitectura orientada a eventos (Pub/Sub)
+El Order Processing Service actúa como productor de eventos, publicando mensajes en Pub/Sub una vez que la orden es creada.
+Los servicios consumidores (Inventory, Billing, Notification) procesan el evento de forma independiente, permitiendo desacoplamiento, escalabilidad y tolerancia a fallos.
+```
+┌────────────┐
+│   Cliente  │
+└─────┬──────┘
+      │ HTTP (REST)
+      ▼
+┌──────────────────────────┐
+│  Order Processing Service│
+│──────────────────────────│
+│ - Validación request     │
+│ - Seguridad (Basic/Auth) │
+│ - Persistencia orden     │
+│ - Estado: PENDING        │
+│                          │
+│ >> Publica evento        │
+│    OrderCreated          │
+└──────────┬───────────────┘
+           │
+           │ Evento asíncrono
+           ▼
+╔════════════════════════════════╗
+║   GCP Pub/Sub - Topic          ║
+║────────────────────────────────║
+║   "order-created-topic"        ║
+╚═══════════╦════════════╦═══════╝
+            │            │
+            │            │
+            ▼            ▼
+┌─────────────────┐  ┌──────────────────┐
+│ Inventory       │  │ Billing Service  │
+│ Service         │  │                  │
+│─────────────────│  │ - Genera factura │
+│ - Reserva stock │  │ - Emite evento   │
+│ - Valida stock  │  │                  │
+│                 │  └──────────────────┘
+│ >> Publica      │
+│ InventoryResult │
+└───────┬─────────┘
+        │
+        ▼
+╔════════════════════════════════╗
+║   GCP Pub/Sub - Topic          ║
+║────────────────────────────────║
+║   "inventory-result-topic"     ║
+╚═══════════╦════════════════════╝
+            │
+            ▼
+┌──────────────────────────┐
+│ Order Processing Service │
+│──────────────────────────│
+│ - Actualiza estado orden │
+│   CONFIRMED / CANCELLED  │
+└──────────────────────────┘
+            │
+            ▼
+     ┌────────────┐
+     │  Data Base │
+     │   (Ordes)  │
+     └─────┬──────┘
+
+```
 
 ## 👥 Autor
 
