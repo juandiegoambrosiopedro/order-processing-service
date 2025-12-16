@@ -1,0 +1,68 @@
+application:
+  title: BACKEND - SERVICIO DE PROCESAMIENTO DE ÓRDENES
+  description: |
+    ### Plantilla base para microservicios Java con "Arquitectura Hexagonal" y "OpenApi".
+    - **Tecnologia:** Google Cloud Kubernetes Engine (ejemplo de descripción)
+    - **Correo "Project Manager":** grupoleyva.pm@gmail.com
+  version: 1.0.0
+
+spring:
+  application:
+    name: order-processing-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+    mx.com.leyva.order: INFO
+    org.hibernate.orm.connections.pooling: WARN
+
+order:
+  iva: 0.16
+
+security:
+  requests:
+
+    ignoring:
+      - path: "/swagger-ui/**"
+      - path: "/v3/api-docs"
+      - path: "/v3/api-docs/**"
+      - path: "/swagger-ui/index.html"
+      - path: "/webjars/**"
+      - path: "/swagger-ui.html"
+      - path: "/api-docs/**"
+      - path: "/swagger-resources/**"
+
+      - path: "/h2-console/**"
+      - path: "/h2-console*/**"
+
+    authorize:
+      - method: GET
+        path: /inventory/sku/{sku}
+      - method: POST
+        path: /orders/process
+
+    default-access: denyAll
