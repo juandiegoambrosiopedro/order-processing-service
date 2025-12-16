@@ -21,6 +21,8 @@ public final class Messages {
     /** Errores del servidor. */
     public static final String INTERNAL_SERVER_ERROR = "Ocurrió un error interno en el servidor.";
 
+    public static final String RESORCE_NOT_FOUND = "Recurso no encontrado.";
+
     private Messages() {
         throw new IllegalStateException("Clase de constantes.");
     }
