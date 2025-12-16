@@ -91,21 +91,14 @@ src/main/resources/db/migration/V1__create_orders_tables.sql
 
 ##### 2. Configurar application.yml
 
-Edita `src/main/resources/application.yml`:
+Edita `src/main/resources/application.yml` para la configuración de las variables de entorno local:
 ```yaml
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/order_processing_db?useSSL=false&serverTimezone=UTC
-    username: order_user
-    password: order_pass123
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+   datasource:
+      url: ${DB_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+    
 ```
 
 ---
