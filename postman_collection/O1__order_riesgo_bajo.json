@@ -1,0 +1,17 @@
+curl --location 'http://localhost:8080/orders/process' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+--header 'Cookie: JSESSIONID=8F935484871197891ED51BF35DD9A8BE' \
+--data '
+{
+"orderId": "ORD-FUEL-0001",
+"customerId": "CUST-PARTICULAR-01",
+"canal": "WEB",
+"items": [
+{
+"sku": "SKU-ADIT-LIMP",
+"cantidad": 1,
+"precioUnitario": 350.00
+}
+]
+}'

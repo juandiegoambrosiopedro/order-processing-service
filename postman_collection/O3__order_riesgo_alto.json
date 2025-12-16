@@ -1,0 +1,21 @@
+curl --location 'http://localhost:8080/orders/process' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+--header 'Cookie: JSESSIONID=8F935484871197891ED51BF35DD9A8BE' \
+--data '{
+"orderId": "ORD-FUEL-0003",
+"customerId": "CUST-TALLER-03",
+"canal": "CALLCENTER",
+"items": [
+{
+"sku": "SKU-ACEITE-5W30",
+"cantidad": 20,
+"precioUnitario": 450.00
+},
+{
+"sku": "SKU-ADIT-LIMP",
+"cantidad": 10,
+"precioUnitario": 350.00
+}
+]
+}'

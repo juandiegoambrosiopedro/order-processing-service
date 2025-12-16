@@ -1,0 +1,4 @@
+curl --location 'http://localhost:8080/inventory/sku/SKU-GAS-PLUS-91' \
+--header 'accept: */*' \
+--header 'Authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+--header 'Cookie: JSESSIONID=8F935484871197891ED51BF35DD9A8BE'

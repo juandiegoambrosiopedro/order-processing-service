@@ -1,0 +1,16 @@
+curl --location 'http://localhost:8080/orders/process' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+--header 'Cookie: JSESSIONID=8F935484871197891ED51BF35DD9A8BE' \
+--data '{
+"orderId": "ORD-FUEL-0004",
+"customerId": "CUST-TALLER-04",
+"canal": "WEB",
+"items": [
+{
+"sku": "SKU-ACEITE-5W30",
+"cantidad": 500,
+"precioUnitario": 450.00
+}
+]
+}'
